@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<business_vault schema_version="1" company="ExampleCom">
+    <!-- Description of Business Vault Objects -->
+    <as_of_dates>
+        <as_of_date name="business_days">
+            <date definition="TO_DATE('2025-04-07', 'YYYY-MM-DD')" description="2024/04/07"/>
+            <date definition="TO_DATE('2025-04-08', 'YYYY-MM-DD')" description="2024/04/08"/>
+            <date definition="TO_DATE('2025-04-09', 'YYYY-MM-DD')" description="2024/04/09"/>
+            <date definition="TO_DATE('2025-04-10', 'YYYY-MM-DD')" description="2024/04/10"/>
+            <date definition="TO_DATE('2025-04-11', 'YYYY-MM-DD')" description="2025/04/11"/>
+            <date definition="TO_DATE('2025-04-12', 'YYYY-MM-DD')" description="2025/04/12"/>
+        </as_of_date>
+    </as_of_dates>
+
+    <!-- generate all PIT-Tables for as_of_date business_days -->
+    <pit_tables as_of_dates="business_days"/>
+</business_vault>
+

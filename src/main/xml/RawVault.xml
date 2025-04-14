@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Example XML configuration for the RawVault
+
+  @schemaVersion - the schema version of this configuration file (current version is 3)
+  @company - the name of the company for which the DWH is built
+  -->
+<raw_vault schema_version="3" company="ExampleCom" >
+    <!--
+      Information on the DWH system
+      For a system different targets can be defined.
+      -->
+    <system>
+        <!--
+          Information on a system target
+
+          @name - name of the target (usually dev, test, prod)
+          @server - hostname of the DB server
+          @database - name of the Postgres database
+          @schema - Name of the DV2 schema in the database
+          @dbms - Name of the dbms (currently only postgresql)
+          -->
+        <target name="dev"
+                server="db"
+                database="DataVault"
+                schema="DATAVAULT"
+                dbms="postgresql">
+            <!--
+              Information on all sources used for this target
+
+              The different data sources for the data warehouse are loaded into data source specific schemas
+              @name - name of the data source
+              @database - name of the database containing the data source specific schema
+              @schema - name of the data source specific schema
+              @dbms - name of the dbms (currently only postgresql)
+              -->
+            <source name="examplecom"
+                    database="DataVault"
+                    schema="OPSYS1"
+                    dbms="postgresql"/>
+            <!--
+              Import directory on the DB server with exports from the data sources
+
+              This definition is used by /db_sources/file_import
+              -->
+            <import_dir name="examplecom" dir="/opt/datavault/import"/>
+        </target>
+    </system>
+    <!--
+      The business keys of the data vault
+
+      They are named nat_keys here because they should be the natural keys used from the business.
+      -->
+    <nat_keys>
+        <!--
+          Every nat_key has an ID and a Name.
+          The ID is referenced in this configuration.
+
+          @id - ID of the Natural Key
+          @name - Name of the Natural Key
+          -->
+        <nat_key id="customer" name="Customer"/>
+        <nat_key id="product" name="Product"/>
+        <nat_key id="order" name="Order"/>
+    </nat_keys>
+    <!--
+      Definition of the DB sources and all DV2 objects served from these DB sources
+      -->
+    <db_sources>
+        <!--
+          A DB source and all DV2 objects dependend on this DB source
+
+          @name - Name of the DB source
+          @description - Description of the DB source
+          @models_dir - In the dbt model the scripts for this DB source are generated into this sub directory
+          @record_source_prefix - prefix of RECORD_SOURCE value for data read from this DB source
+          -->
+        <db_source name="examplecom" description="Sales Data of ExampleCom."
+                   models_dir="examplecom" record_source_prefix="EC">
+            <!--
+              Information on csv files and import scripts for this DB source
+
+              @script_dir - subdirectory for the scripts generated for this DB source
+              @import_dir - the subdirectory for this DB source in /system/target/import_dir
+              @timestamp - an indicator whether the file names in import_dir have a suffix _yyyymmdd_hhmmss
+              @header - an indicator whether the csv files contain a header line
+              -->
+            <file_import script_dir="examplecom" import_dir="examplecom" timestamp="yes" header="yes"/>
+            <!--
+              the definition of the DB table in /system/target/source
+
+              @name - the table name
+              @description - the table description
+              -->
+            <table name="orders" description="Sales Data of ExampleCom.">
+                <!--
+                  the table columns
+                  -->
+                <fields>
+                    <!--
+                      every table column is defined
+
+                      @name - column name
+                      @type - data type of the column
+                      @is_nullable - indicator whether this column is nullable
+                      -->
+                    <field name="OrderID" type="char(10)" is_nullable="no"/>
+                    <field name="CustomerID" type="char(10)" is_nullable="no"/>
+                    <field name="CustomerName" type="char(35)" is_nullable="yes"/>
+                    <field name="PositionID" type="char(10)" is_nullable="no"/>
+                    <field name="ProductID" type="char(15)" is_nullable="no"/>
+                    <field name="ProductName" type="char(35)" is_nullable="yes"/>
+                    <field name="Amount" type="decimal(8)" is_nullable="yes"/>
+                    <field name="Unit" type="char(10)" is_nullable="yes"/>
+                    <field name="DateOfPurchase" type="char(10)" is_nullable="no"/>
+                    <field name="PricePerUnit" type="char(10)" is_nullable="yes"/>
+                    <field name="Price" type="char(10)" is_nullable="no"/>
+                </fields>
+                <!--
+                  definition of the unique key for this DB source
+                  -->
+                <unique_key>
+                    <!--
+                      every field which is part of the unique key for this DB source is given
+
+                      @name - Reference to ../fields/field/@name
+                      -->
+                    <field name="OrderID"/>
+                    <field name="PositionID"/>
+                </unique_key>
+                <!--
+                  Information on the csv file
+
+                  @csv_name - name prefix for the csv file from the source
+                  -->
+                <import csv_name="examplecom"/>
+                <!--
+                  stage defines the DV2 objects which are created from this db_source/table
+
+                  @name - Name of the stage object (used for psa_stage, raw_stage and stage)
+                  @record_source_suffix - the suffix for the RECORD SOURCE column
+                  @psa_description - description for psa_stage
+                  @raw_description - description for raw_stage
+                  @stg_description - description for stage
+                  -->
+                <stage name="ec_orders"
+                       record_source_suffix="ORDERS"
+                       psa_description="Persistent Staging Area for Orders"
+                       raw_description="Raw Stage for Orders"
+                       stg_description="Stage for Orders">
+                    <hub>
+                        <nat_key idref="customer" source_field="CustomerID"/>
+                        <sat description="Satellite on Hub Customer">
+                            <payload>
+                                <field name="CustomerName"/>
+                            </payload>
+                        </sat>
+                    </hub>
+                    <hub>
+                        <nat_key idref="product" source_field="ProductID"/>
+                        <sat description="Satellite on Hub Product">
+                            <payload>
+                                <field name="ProductName"/>
+                            </payload>
+                        </sat>
+                    </hub>
+                    <hub>
+                        <nat_key idref="order" source_field="OrderID"/>
+                        <sat description="Satellite on Hub Order">
+                            <payload>
+                                <field name="DateOfPurchase"/>
+                            </payload>
+                        </sat>
+                        <ma_sat description="Multi-Active-Satellite on Hub Order for Position Data">
+                            <child_dependent_keys>
+                                <field name="PositionID"/>
+                            </child_dependent_keys>
+                            <payload existenceFlag="yes">
+                                <field name="ProductID" type="char(15)" is_nullable="no"/>
+                                <field name="ProductName" type="char(35)" is_nullable="yes"/>
+                                <field name="Amount" type="decimal(8)" is_nullable="yes"/>
+                                <field name="Unit" type="char(10)" is_nullable="yes"/>
+                                <field name="PricePerUnit" type="char(10)" is_nullable="yes"/>
+                                <field name="Price" type="char(10)" is_nullable="no"/>
+                            </payload>
+                        </ma_sat>
+                    </hub>
+                    <link>
+                        <nat_key idref="customer"/>
+                        <nat_key idref="order"/>
+                        <sat description="Satellite on Link Customer-Order">
+                            <payload existenceFlag="yes"/>
+                        </sat>
+                    </link>
+                </stage>
+            </table>
+        </db_source>
+    </db_sources>
+</raw_vault>
