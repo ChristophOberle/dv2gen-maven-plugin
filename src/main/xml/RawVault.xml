@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Example XML configuration for the RawVault
-
-  @schemaVersion - the schema version of this configuration file (current version is 3)
-  @company - the name of the company for which the DWH is built
-  -->
-<raw_vault schema_version="3" company="ExampleCom" >
     <!--
-      Information on the DWH system
-      For a system different targets can be defined.
+      Example XML configuration for the RawVault
+
+      @schemaVersion - the schema version of this configuration file (current version is 3)
+      @company - the name of the company for which the DWH is built
       -->
-    <system>
+    <raw_vault schema_version="3" company="ExampleCom" >
         <!--
-          Information on a system target
-
-          @name - name of the target (usually dev, test, prod)
-          @server - hostname of the DB server
-          @database - name of the Postgres database
-          @schema - Name of the DV2 schema in the database
-          @dbms - Name of the dbms (currently only postgresql)
+          Information on the DWH system
+          For a system different targets can be defined.
           -->
-        <target name="dev"
-                server="db"
-                database="DataVault"
-                schema="DATAVAULT"
-                dbms="postgresql">
+        <system>
             <!--
-              Information on all sources used for this target
+              Information on a system target
 
-              The different data sources for the data warehouse are loaded into data source specific schemas
-              @name - name of the data source
-              @database - name of the database containing the data source specific schema
-              @schema - name of the data source specific schema
-              @dbms - name of the dbms (currently only postgresql)
+              @name - name of the target (usually dev, test, prod)
+              @server - hostname of the DB server
+              @database - name of the Postgres database
+              @schema - Name of the DV2 schema in the database
+              @dbms - Name of the dbms (currently only postgresql)
               -->
-            <source name="examplecom"
+            <target name="dev"
+                    server="db"
                     database="DataVault"
-                    schema="OPSYS1"
-                    dbms="postgresql"/>
-            <!--
-              Import directory on the DB server with exports from the data sources
+                    schema="DATAVAULT"
+                    dbms="postgresql">
+                <!--
+                  Information on all sources used for this target
 
-              This definition is used by /db_sources/file_import
-              -->
-            <import_dir name="examplecom" dir="/opt/datavault/import"/>
-        </target>
-    </system>
+                  The different data sources for the data warehouse are loaded into data source specific schemas
+                  @name - name of the data source
+                  @database - name of the database containing the data source specific schema
+                  @schema - name of the data source specific schema
+                  @dbms - name of the dbms (currently only postgresql)
+                  -->
+                <source name="examplecom"
+                        database="DataVault"
+                        schema="OPSYS1"
+                        dbms="postgresql"/>
+                <!--
+                  Import directory on the DB server with exports from the data sources
+
+                  This definition is used by /db_sources/file_import
+                  -->
+                <import_dir name="examplecom" dir="/opt/datavault/import"/>
+            </target>
+        </system>
     <!--
       The business keys of the data vault
 
@@ -68,7 +68,7 @@
       -->
     <db_sources>
         <!--
-          A DB source and all DV2 objects dependend on this DB source
+          A DB source and all DV2 objects dependent on this DB source
 
           @name - Name of the DB source
           @description - Description of the DB source
@@ -197,3 +197,4 @@
         </db_source>
     </db_sources>
 </raw_vault>
+

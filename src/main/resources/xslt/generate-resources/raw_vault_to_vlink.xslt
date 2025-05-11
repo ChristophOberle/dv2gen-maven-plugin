@@ -21,13 +21,13 @@
                 <xsl:text>      , link.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_PK&#xA;</xsl:text>
             </xsl:for-each>
             <xsl:for-each select="nat_keys/nat_key">
-                <xsl:text>      , </xsl:text><xsl:value-of select="@idref"/><xsl:text>.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_KEY&#xA;</xsl:text>
+                <xsl:text>      , _</xsl:text><xsl:value-of select="@idref"/><xsl:text>_.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_KEY&#xA;</xsl:text>
             </xsl:for-each>
             <xsl:text>      , link.LOAD_DATE&#xA;</xsl:text>
             <xsl:text>FROM {{ ref('</xsl:text><xsl:value-of select="@name"/><xsl:text>') }} link&#xA;</xsl:text>
             <xsl:for-each select="nat_keys/nat_key">
-                <xsl:text>JOIN {{ ref('</xsl:text><xsl:value-of select="/raw_vault/hubs/hub[nat_key/@idref = current()/@idref]/@name"/><xsl:text>') }} </xsl:text><xsl:value-of select="@idref"/><xsl:text>&#xA;</xsl:text>
-                <xsl:text>ON </xsl:text><xsl:value-of select="@idref"/><xsl:text>.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_PK = link.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_PK&#xA;</xsl:text>
+                <xsl:text>JOIN {{ ref('</xsl:text><xsl:value-of select="/raw_vault/hubs/hub[nat_key/@idref = current()/@idref]/@name"/><xsl:text>') }} _</xsl:text><xsl:value-of select="@idref"/><xsl:text>_&#xA;</xsl:text>
+                <xsl:text>ON _</xsl:text><xsl:value-of select="@idref"/><xsl:text>_.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_PK = link.</xsl:text><xsl:value-of select="/raw_vault/nat_keys/nat_key[@id = current()/@idref]/@name"/><xsl:text>_PK&#xA;</xsl:text>
             </xsl:for-each>
         </xsl:result-document>
     </xsl:template>
