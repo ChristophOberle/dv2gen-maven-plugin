@@ -31,7 +31,7 @@ The plugin uses the XML configuration and generates definitions for
 * links
 * satellites
 * multi-active satellites (macro ma_sat from AutomateDV)
-* extended tracking satellites (macro xts form AutomateDV)
+* extended tracking satellites (macro xts from AutomateDV)
 * views on links and satellites
 * and more
 
