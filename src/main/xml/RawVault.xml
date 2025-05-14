@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Example XML configuration for the RawVault
+
+  @schemaVersion - the schema version of this configuration file (current version is 4)
+  @company - the name of the company for which the DWH is built
+  -->
+<raw_vault schema_version="4" company="ExampleCom" >
     <!--
-      Example XML configuration for the RawVault
-
-      @schemaVersion - the schema version of this configuration file (current version is 3)
-      @company - the name of the company for which the DWH is built
+      Information on the DWH system
+      For a system different targets can be defined.
       -->
-    <raw_vault schema_version="3" company="ExampleCom" >
+    <system>
         <!--
-          Information on the DWH system
-          For a system different targets can be defined.
+          Information on a system target
+
+          @name - name of the target (usually dev, test, prod)
+          @server - hostname of the DB server
+          @port - port of the DB server
+          @database - name of the Postgres database
+          @schema - Name of the DV2 schema in the database
+          @dbms - Name of the dbms (currently only postgresql)
+          @datavault_dir - path to the DataVault directory on the server
+          @import_dir - path to the import directory on the server
+          @log_dir - path to the log directory on the server
           -->
-        <system>
+        <target name="dev"
+                server="localhost"
+                port="15432"
+                database="ExampleCom"
+                schema="DATAVAULT"
+                dbms="postgresql"
+                datavault_dir="<path-to-maven-project>/dv2gen-example/target/classes/DataVault"
+                import_dir="<path-to-maven-project>/dv2gen-example/src/test/resources/ExampleCom-Data"
+                log_dir="<path-to-logs-directory/logs/DataVault">
             <!--
-              Information on a system target
+              Information on all sources used for this target
 
-              @name - name of the target (usually dev, test, prod)
-              @server - hostname of the DB server
-              @database - name of the Postgres database
-              @schema - Name of the DV2 schema in the database
-              @dbms - Name of the dbms (currently only postgresql)
+              The different data sources for the data warehouse are loaded into data source specific schemas
+              @name - name of the data source
+              @database - name of the database containing the data source specific schema
+              @schema - name of the data source specific schema
+              @dbms - name of the dbms (currently only postgresql)
               -->
-            <target name="dev"
-                    server="db"
-                    database="DataVault"
-                    schema="DATAVAULT"
-                    dbms="postgresql">
-                <!--
-                  Information on all sources used for this target
-
-                  The different data sources for the data warehouse are loaded into data source specific schemas
-                  @name - name of the data source
-                  @database - name of the database containing the data source specific schema
-                  @schema - name of the data source specific schema
-                  @dbms - name of the dbms (currently only postgresql)
-                  -->
-                <source name="examplecom"
-                        database="DataVault"
-                        schema="OPSYS1"
-                        dbms="postgresql"/>
-                <!--
-                  Import directory on the DB server with exports from the data sources
-
-                  This definition is used by /db_sources/file_import
-                  -->
-                <import_dir name="examplecom" dir="/opt/datavault/import"/>
-            </target>
-        </system>
+            <source name="sales"
+                    database="ExampleCom"
+                    schema="SALES"
+                    dbms="postgresql"/>
+        </target>
+    </system>
     <!--
       The business keys of the data vault
 
@@ -75,17 +77,17 @@
           @models_dir - In the dbt model the scripts for this DB source are generated into this sub directory
           @record_source_prefix - prefix of RECORD_SOURCE value for data read from this DB source
           -->
-        <db_source name="examplecom" description="Sales Data of ExampleCom."
-                   models_dir="examplecom" record_source_prefix="EC">
+        <db_source name="sales" description="Sales Data of ExampleCom."
+                   models_dir="sales" record_source_prefix="SALES">
             <!--
               Information on csv files and import scripts for this DB source
 
               @script_dir - subdirectory for the scripts generated for this DB source
-              @import_dir - the subdirectory for this DB source in /system/target/import_dir
+              @import_dir - the subdirectory for this DB source in /system/target/@import_dir
               @timestamp - an indicator whether the file names in import_dir have a suffix _yyyymmdd_hhmmss
               @header - an indicator whether the csv files contain a header line
               -->
-            <file_import script_dir="examplecom" import_dir="examplecom" timestamp="yes" header="yes"/>
+            <file_import script_dir="sales" import_dir="sales" timestamp="yes" header="yes"/>
             <!--
               the definition of the DB table in /system/target/source
 
@@ -133,7 +135,7 @@
 
                   @csv_name - name prefix for the csv file from the source
                   -->
-                <import csv_name="examplecom"/>
+                <import csv_name="orders"/>
                 <!--
                   stage defines the DV2 objects which are created from this db_source/table
 
@@ -143,7 +145,7 @@
                   @raw_description - description for raw_stage
                   @stg_description - description for stage
                   -->
-                <stage name="ec_orders"
+                <stage name="sales_orders"
                        record_source_suffix="ORDERS"
                        psa_description="Persistent Staging Area for Orders"
                        raw_description="Raw Stage for Orders"

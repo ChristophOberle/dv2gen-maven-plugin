@@ -35,3 +35,9 @@ The plugin uses the XML configuration and generates definitions for
 * views on links and satellites
 * and more
 
+## Changes
+Version 1.0.1:
+* includes batch scripts to import CSV files, load data into PSA tables and load data from PSA tables to the RawVault and BusinessVault
+* includes sql_scripts to create db schemas and roles and users in the postgres db
+* includes a dbt_project.yml file to define the dbt project
+* includes the packages.yml file with the AutomateDV package for dbt
