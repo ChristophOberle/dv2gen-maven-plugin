@@ -166,6 +166,15 @@ public class GenerateResourcesDv2Gen extends AbstractMojo {
         }
 
         try {
+            transform("target/classes/DataVault/generated-sources/xml/RawVault.xml",
+                    "xslt/generate-resources/dbt_project.xslt",
+                    "target/temp/dbt_project.xml",
+                    baseDir);
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
             copyDataVaultScripts(baseDir);
         } catch (IOException e) {
             throw new RuntimeException(e);
