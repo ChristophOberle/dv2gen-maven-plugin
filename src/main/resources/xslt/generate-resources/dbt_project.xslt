@@ -4,14 +4,14 @@
 
     <xsl:param name="baseDir" select="/.."/>
     <xsl:template match="/raw_vault">
-        <xsl:call-template name="genDbtProjectYml"/>
+        <xsl:call-template name="genDbtProjectYmlTemplate"/>
         <xsl:call-template name="genProfilesYmlTemplate"/>
         <xsl:call-template name="genPgPassTemplate"/>
         <xsl:call-template name="genGetCredentialsPs1Template"/>
     </xsl:template>
 
-    <xsl:template name="genDbtProjectYml">
-        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/DataVault/dbt_project.yml')}" method="text" omit-xml-declaration="yes">
+    <xsl:template name="genDbtProjectYmlTemplate">
+        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/templates/DataVault/dbt_project.yml')}" method="text" omit-xml-declaration="yes">
             <xsl:text>&#xA;</xsl:text>
             <xsl:text>name: </xsl:text>
             <xsl:value-of select="system/@name"/>
