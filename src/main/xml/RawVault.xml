@@ -8,9 +8,12 @@
 <raw_vault schema_version="5" company="ExampleCom" >
     <!--
       Information on the DWH system
+
+      @name - Name of the Data Warehouse system. It is used for name and profile name of the dbt project
+
       For a system different targets can be defined.
       -->
-    <system>
+    <system name="ExampleCom_DataWarehouse">
         <!--
           Information on a system target
 
@@ -45,7 +48,6 @@
             <source name="sales"
                     database="ExampleCom"
                     schema="SALES"
-                    import_subdir="sales"
                     dbms="postgresql"/>
         </target>
     </system>
@@ -84,11 +86,11 @@
               Information on csv files and import scripts for this DB source
 
               @script_dir - subdirectory for the scripts generated for this DB source
-              @import_dir - the subdirectory for this DB source in /system/target/@import_dir
+              @import_subdir - the subdirectory for this DB source in /system/target/@import_dir
               @timestamp - an indicator whether the file names in import_dir have a suffix _yyyymmdd_hhmmss
               @header - an indicator whether the csv files contain a header line
               -->
-            <file_import script_dir="sales" import_dir="sales" timestamp="yes" header="yes"/>
+            <file_import script_dir="sales" import_subdir="sales" timestamp="yes" header="yes"/>
             <!--
               the definition of the DB table in /system/target/source
 
