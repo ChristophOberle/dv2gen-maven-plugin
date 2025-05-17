@@ -6,6 +6,8 @@
     <xsl:template match="/raw_vault">
         <xsl:call-template name="genDbtProjectYml"/>
         <xsl:call-template name="genProfilesYmlTemplate"/>
+        <xsl:call-template name="genPgPassTemplate"/>
+        <xsl:call-template name="genGetCredentialsPs1Template"/>
     </xsl:template>
 
     <xsl:template name="genDbtProjectYml">
@@ -277,7 +279,7 @@
     </xsl:template>
 
     <xsl:template name="genProfilesYmlTemplate">
-        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/templates/profiles.yml')}" method="text" omit-xml-declaration="yes">
+        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/templates/home/.dbt/profiles.yml')}" method="text" omit-xml-declaration="yes">
             <xsl:text>&#xA;</xsl:text>
             <xsl:value-of select="system/@name"/><xsl:text>:</xsl:text>
             <xsl:text>&#xA;</xsl:text>
@@ -298,9 +300,9 @@
                 <xsl:text>&#xA;</xsl:text>
                 <xsl:text>      schema: </xsl:text><xsl:value-of select="@schema"/>
                 <xsl:text>&#xA;</xsl:text>
-                <xsl:text>      user: ***</xsl:text>
+                <xsl:text>      user: ***user***</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
-                <xsl:text>      password: ***</xsl:text>
+                <xsl:text>      password: ***password***</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
                 <xsl:text>      threads: 1</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
@@ -311,6 +313,39 @@
                 <xsl:text>      retries: 1  # default 1 retry on error/timeout when opening connections</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
             </xsl:for-each>
+        </xsl:result-document>
+    </xsl:template>
+
+    <xsl:template name="genPgPassTemplate">
+        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/templates/home/.pgpass')}" method="text" omit-xml-declaration="yes">
+            <xsl:text>#Host:Port:Database:User:Passwort</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
+            <xsl:for-each select="system/target">
+                <xsl:text># </xsl:text><xsl:value-of select="../@name"/><xsl:text> target </xsl:text><xsl:value-of select="@name"/>
+                <xsl:text>&#xA;</xsl:text>
+                <xsl:value-of select="@server"/>
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="@port"/>
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="@database"/>
+                <xsl:text>:</xsl:text>
+                <xsl:text>***user***:***password***</xsl:text>
+                <xsl:text>&#xA;</xsl:text>
+            </xsl:for-each>
+        </xsl:result-document>
+    </xsl:template>
+
+    <xsl:template name="genGetCredentialsPs1Template">
+        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/templates/home/get_credentials.ps1')}" method="text" omit-xml-declaration="yes">
+            <xsl:text># Postgres</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
+            <xsl:text>$PGUSER = "***user***"</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
+            <xsl:text># $PGPASSWORD is not set</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
+            <xsl:text># It is specified in file .pgpass in the user's home directory for the combination of server, port, database and user
+            </xsl:text>
+            <xsl:text>&#xA;</xsl:text>
         </xsl:result-document>
     </xsl:template>
 </xsl:stylesheet>
