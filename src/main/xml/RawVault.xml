@@ -5,7 +5,7 @@
   @schemaVersion - the schema version of this configuration file (current version is 4)
   @company - the name of the company for which the DWH is built
   -->
-<raw_vault schema_version="4" company="ExampleCom" >
+<raw_vault schema_version="5" company="ExampleCom" >
     <!--
       Information on the DWH system
       For a system different targets can be defined.
@@ -45,6 +45,7 @@
             <source name="sales"
                     database="ExampleCom"
                     schema="SALES"
+                    import_subdir="sales"
                     dbms="postgresql"/>
         </target>
     </system>

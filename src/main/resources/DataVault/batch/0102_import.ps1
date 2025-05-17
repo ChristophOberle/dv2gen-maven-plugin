@@ -31,8 +31,7 @@ function evaluate_target_and_db_source {
     # read RawVault.xml file
     # assuming the script is running in <Maven-target-dir>/classes/DataVault/batch
     [xml]$RawVault = Read-Xml -XmlFile '../generated-sources/xml/RawVault.xml'
-    $importdir = Get-SingleXmlAttributeValue -Xml $RawVault -XPath ("/raw_vault/system/target[@name = '" + $target + "']/@import_dir")
-    $fileimportdirectory = $importdir + '/' + $db_source + '/'
+    $fileimportdirectory = Get-SingleXmlAttributeValue -Xml $RawVault -XPath ("concat(/raw_vault/system/target[@name = '" + $target + "']/@import_dir, '/', /raw_vault/system/target[@name = '" + $target + "']/source[@name = '" + $db_source + "']/@import_subdir")
     $datavaultdirectory = Get-SingleXmlAttributeValue -Xml $RawVault -XPath ("/raw_vault/system/target[@name = '" + $target + "']/@datavault_dir")
     $programdirectory = $datavaultdirectory + '/sql_scripts/DataVault_import/' + $db_source + '/'
     $logdirectory = Get-SingleXmlAttributeValue -Xml $RawVault -XPath ("/raw_vault/system/target[@name = '" + $target + "']/@log_dir")
