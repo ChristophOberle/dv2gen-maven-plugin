@@ -36,7 +36,12 @@ The plugin uses the XML configuration and generates definitions for
 * and more
 
 ## Changes
-Version 1.0.1:
+### Version 1.0.2:
+* uses schema_version 6 of RawVault.xml
+* uses python3 scripts to access dbt_project.yml and .dbt/profiles.yml to extract configuration information
+* generates some templates, that can be used to set runtime configurations
+
+### Version 1.0.1:
 * includes batch scripts to import CSV files, load data into PSA tables and load data from PSA tables to the RawVault and BusinessVault
 * includes sql_scripts to create db schemas and roles and users in the postgres db
 * includes a dbt_project.yml file to define the dbt project
