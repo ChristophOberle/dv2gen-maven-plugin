@@ -40,32 +40,15 @@
                     </xsl:choose>
                     <xsl:value-of select="@name"/>
                     <xsl:text>" -%} </xsl:text>
-                    <xsl:value-of select="source[@name=$source_name]/@database"/>
+                    <xsl:value-of select="@database"/>
                     <xsl:text>&#xA;</xsl:text>
                 </xsl:for-each>
                 <xsl:text>      {%- else -%} invalid_database</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
                 <xsl:text>      {%- endif -%}</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
-                <xsl:text>    schema: |</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-                <xsl:for-each select="../../system/target">
-                    <xsl:choose>
-                        <xsl:when test="position() = 1">
-                            <xsl:text>      {%- if   target.name == "</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>      {%- elif target.name == "</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:value-of select="@name"/>
-                    <xsl:text>" -%} </xsl:text>
-                    <xsl:value-of select="source[@name=$source_name]/@schema"/>
-                    <xsl:text>&#xA;</xsl:text>
-                </xsl:for-each>
-                <xsl:text>      {%- else -%} invalid_database</xsl:text>
-                <xsl:text>&#xA;</xsl:text>
-                <xsl:text>      {%- endif -%}</xsl:text>
+                <xsl:text>    schema: </xsl:text>
+                <xsl:value-of select="@schema"/>
                 <xsl:text>&#xA;</xsl:text>
                 <xsl:text>    tables:</xsl:text>
                 <xsl:text>&#xA;</xsl:text>

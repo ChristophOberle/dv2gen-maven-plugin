@@ -5,7 +5,7 @@
   @schemaVersion - the schema version of this configuration file (current version is 4)
   @company - the name of the company for which the DWH is built
   -->
-<raw_vault schema_version="5" company="ExampleCom" >
+<raw_vault schema_version="6" company="ExampleCom" >
     <!--
       Information on the DWH system
 
@@ -35,21 +35,7 @@
                 dbms="postgresql"
                 datavault_dir="<path-to-maven-project>/dv2gen-example/target/classes/DataVault"
                 import_dir="<path-to-maven-project>/dv2gen-example/src/test/resources/ExampleCom-Data"
-                log_dir="<path-to-logs-directory/logs/DataVault">
-            <!--
-              Information on all sources used for this target
-
-              The different data sources for the data warehouse are loaded into data source specific schemas
-              @name - name of the data source
-              @database - name of the database containing the data source specific schema
-              @schema - name of the data source specific schema
-              @dbms - name of the dbms (currently only postgresql)
-              -->
-            <source name="sales"
-                    database="ExampleCom"
-                    schema="SALES"
-                    dbms="postgresql"/>
-        </target>
+                log_dir="<path-to-logs-directory/logs/DataVault"/>
     </system>
     <!--
       The business keys of the data vault
@@ -78,10 +64,11 @@
           @name - Name of the DB source
           @description - Description of the DB source
           @models_dir - In the dbt model the scripts for this DB source are generated into this sub directory
+          @schema - name of the data source specific schema
           @record_source_prefix - prefix of RECORD_SOURCE value for data read from this DB source
           -->
         <db_source name="sales" description="Sales Data of ExampleCom."
-                   models_dir="sales" record_source_prefix="SALES">
+                   models_dir="sales" schema="SALES" record_source_prefix="SALES">
             <!--
               Information on csv files and import scripts for this DB source
 

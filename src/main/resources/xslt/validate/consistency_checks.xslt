@@ -8,7 +8,6 @@
         <xsl:call-template name="test_stages_all_nat_keys_create_hubs"/>
         <xsl:call-template name="test_stages_all_source_tables_exist"/>
         <xsl:call-template name="test_stages_all_nat_key_source_fields_are_defined"/>
-        <xsl:call-template name="test_db_sources_all_sources_are_defined_for_all_targets"/>
     </xsl:template>
 
     <xsl:template name="test_all_referenced_nat_keys_are_provided">
@@ -84,17 +83,4 @@
             </xsl:if>
         </xsl:for-each>
     </xsl:template>
-
-    <xsl:template name="test_db_sources_all_sources_are_defined_for_all_targets">
-        <xsl:for-each select="db_sources/db_source/@name">
-            <xsl:variable name="source_name" select="."/>
-            <xsl:for-each select="/raw_vault/system/target">
-                <xsl:if test="not(source[@name = $source_name])">
-                    <xsl:message>db_source <xsl:value-of select="$source_name"/> is not defined for target <xsl:value-of select="@name"/></xsl:message>
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:for-each>
-    </xsl:template>
-
-
 </xsl:stylesheet>

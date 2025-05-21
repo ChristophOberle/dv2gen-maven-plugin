@@ -7,7 +7,6 @@
         <xsl:call-template name="genDbtProjectYmlTemplate"/>
         <xsl:call-template name="genProfilesYmlTemplate"/>
         <xsl:call-template name="genPgPassTemplate"/>
-        <xsl:call-template name="genGetCredentialsPs1Template"/>
     </xsl:template>
 
     <xsl:template name="genDbtProjectYmlTemplate">
@@ -332,20 +331,6 @@
                 <xsl:text>***user***:***password***</xsl:text>
                 <xsl:text>&#xA;</xsl:text>
             </xsl:for-each>
-        </xsl:result-document>
-    </xsl:template>
-
-    <xsl:template name="genGetCredentialsPs1Template">
-        <xsl:result-document href="{concat('file://', $baseDir, '/target/classes/templates/home/get_credentials.ps1')}" method="text" omit-xml-declaration="yes">
-            <xsl:text># Postgres</xsl:text>
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:text>$PGUSER = "***user***"</xsl:text>
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:text># $PGPASSWORD is not set</xsl:text>
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:text># It is specified in file .pgpass in the user's home directory for the combination of server, port, database and user
-            </xsl:text>
-            <xsl:text>&#xA;</xsl:text>
         </xsl:result-document>
     </xsl:template>
 </xsl:stylesheet>

@@ -5,7 +5,7 @@
 
         <xsl:for-each select="db_sources/db_source/table">
             <xsl:variable name="db_source_name" select="../@name"/>
-            <xsl:message>select * into DWH_Transfer.<xsl:value-of select="../@name"/>.<xsl:value-of select="@name"/> from <xsl:value-of select="../../../system/target[@name = 'prod']/source[@name = $db_source_name]/@database"/>.<xsl:value-of select="../../../system/target[@name = 'prod']/source[@name = $db_source_name]/@schema"/>.<xsl:value-of select="@name"/>;</xsl:message>
+            <xsl:message>select * into DWH_Transfer.<xsl:value-of select="../@name"/>.<xsl:value-of select="@name"/> from <xsl:value-of select="../@database"/>.<xsl:value-of select="../@schema"/>.<xsl:value-of select="@name"/>;</xsl:message>
         </xsl:for-each>
     </xsl:template>
 
