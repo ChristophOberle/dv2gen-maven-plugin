@@ -21,9 +21,14 @@ $project_dir = Split-Path -Path $PSScriptRoot -Parent
 $home_dir = $HOME
 
 # set target and db_user for current profile from .dbt/profiles.yml
-$profile = get_profile_from_project -program_dir ($project_dir + "/batch") -project_file ($project_dir + "/dbt_project.yml")
-$target = get_target_from_profile -program_dir ($project_dir + "/batch") -profiles_file ($home_dir + "/.dbt/profiles.yml") -dbt_profile $profile
-$db_user = get_user_from_profile -program_dir ($project_dir + "/batch") -profiles_file ($home_dir + "/.dbt/profiles.yml") -dbt_profile $profile -target $target
+$dbt_project = (json_from_yaml -program_dir ($project_dir + "/batch") -yaml_file ($project_dir + "/dbt_project.yml") -json_file ($project_dir + "/dbt_project.json"))
+$profiles = (json_from_yaml -program_dir ($project_dir + "/batch") -yaml_file ($home_dir + "/.dbt/profiles.yml") -json_file ($home_dir + "/.dbt/profiles.json"))
+
+$profile = $dbt_project.profile
+Write-Host "profile: $profile"
+
+$target = $profiles."$profile".target
+$db_user = $profiles."$profile".outputs."$target".user
 
 # $db_password is not set
 # It is specified in file .pgpass in the user's home directory for the combination of server, port, database and user

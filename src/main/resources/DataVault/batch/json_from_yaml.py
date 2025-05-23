@@ -1,13 +1,11 @@
 # get profile from project
 
-import yaml
 import sys
+import yaml
+import json
 
 with open(sys.argv[1], mode="rt", encoding="utf-8") as file:
-    dbt_project = yaml.safe_load(file)
-
-profile = dbt_project['profile']
-
-sys.stdout.write(profile)
+    content = json.dumps(yaml.safe_load(file))
+sys.stdout.write(content)
 sys.stdout.flush()
 sys.exit(0)
