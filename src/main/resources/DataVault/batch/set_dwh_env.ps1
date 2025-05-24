@@ -21,8 +21,8 @@ $project_dir = Split-Path -Path $PSScriptRoot -Parent
 $home_dir = $HOME
 
 # set target and db_user for current profile from .dbt/profiles.yml
-$dbt_project = (json_from_yaml -program_dir ($project_dir + "/batch") -yaml_file ($project_dir + "/dbt_project.yml") -json_file ($project_dir + "/dbt_project.json"))
-$profiles = (json_from_yaml -program_dir ($project_dir + "/batch") -yaml_file ($home_dir + "/.dbt/profiles.yml") -json_file ($home_dir + "/.dbt/profiles.json"))
+$dbt_project = (ConvertFrom-Yaml -ProgramDir ($project_dir + "/batch") -YamlFile ($project_dir + "/dbt_project.yml"))
+$profiles = (ConvertFrom-Yaml -ProgramDir ($project_dir + "/batch") -YamlFile ($home_dir + "/.dbt/profiles.yml"))
 
 $profile = $dbt_project.profile
 Write-Host "profile: $profile"
